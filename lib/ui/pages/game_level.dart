@@ -26,6 +26,8 @@ class GameLevel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final quizQuestionsProvider = Provider.of<QuizQuestionsProvider>(context);
+    // if(quizQuestionsProvider.isLoading == true) quizQuestionsProvider.requestOnlineQuestions();
     return Scaffold(
         appBar: AppBar(
           title: Text(category.name),

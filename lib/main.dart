@@ -1,5 +1,8 @@
+import 'package:cricquiz/providers/LeaderboardProvider.dart';
+import 'package:cricquiz/providers/QuizQuestionsProvider.dart';
 import 'package:cricquiz/ui/pages/home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -7,14 +10,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        
-        primarySwatch: Colors.green,
+    return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => QuizQuestionsProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => LeaderboardProvider(),
+            ),
+          ],
+          child: MaterialApp(
+        title: 'CricQuiz',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          
+          primarySwatch: Colors.green,
+        ),
+        home: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }

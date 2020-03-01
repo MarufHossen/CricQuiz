@@ -1,0 +1,1 @@
+const ApiUrl = "http://cricquiz.thetimesword.com/api/v1/";

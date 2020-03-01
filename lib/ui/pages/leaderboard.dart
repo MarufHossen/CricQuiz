@@ -1,19 +1,22 @@
+import 'package:cricquiz/providers/LeaderboardProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LeaderBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
+    final leaderBoardProvider = Provider.of<LeaderboardProvider>(context);
+    if (leaderBoardProvider.isLoading)
+      leaderBoardProvider.requestOnlineLeaderboard();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
           color: Colors.black,
-          
-           icon: Icon(Icons.arrow_back),
-           onPressed: (){
-             Navigator.pop(context);
-           },
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: Text(
           "Leaderboard",
@@ -48,7 +51,7 @@ class LeaderBoard extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15.0),
                                 )),
-                            Text("S Khan")
+                            Text(leaderBoardProvider.leaderboardData[1].name.name)
                           ],
                         ),
                         Column(
@@ -63,7 +66,7 @@ class LeaderBoard extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20.0),
                                 )),
-                            Text("Maruf Hossen")
+                            Text(leaderBoardProvider.leaderboardData[0].name.name)
                           ],
                         ),
                         Column(
@@ -78,7 +81,7 @@ class LeaderBoard extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15.0),
                                 )),
-                            Text("P Tahsin")
+                            Text(leaderBoardProvider.leaderboardData[2].name.name)
                           ],
                         )
                       ],
@@ -97,55 +100,60 @@ class LeaderBoard extends StatelessWidget {
                     height: 10.0,
                   ),
                   Expanded(
-
                     child: Container(
-                     
-                      child: ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          index = index+1;
-                          return Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5.0)),
-                                    color: Colors.grey[100],
-                                  ),
-                                  padding: EdgeInsets.all(8.0),
-                                  height: 50.0,
-                                  child: Row(
+                      child: leaderBoardProvider.isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : ListView.builder(
+                              itemCount: leaderBoardProvider.leaderboardData.length,
+                              itemBuilder: (context, index) {
+                                var position = index + 1;
+                                
+                                return Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Column(
                                     children: <Widget>[
-                                      CircleAvatar(
-                                        radius: 28.0,
-                                        child: Text(
-                                          index.toString(),
-                                          style: TextStyle(color: Colors.white),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          color: Colors.grey[100],
                                         ),
-                                        backgroundColor: Colors.deepPurple,
+                                        padding: EdgeInsets.all(8.0),
+                                        height: 50.0,
+                                        child: Row(
+                                          children: <Widget>[
+                                            CircleAvatar(
+                                              radius: 28.0,
+                                              child: Text(
+                                                position.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              backgroundColor:
+                                                  Colors.deepPurple,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              leaderBoardProvider.leaderboardData[index].name.name + "==>"+leaderBoardProvider.leaderboardData[index].totalPoints.toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 15.0),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        "Mr Maruf Hossen",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 15.0),
-                                      ),
+                                        height: 0.0,
+                                      )
                                     ],
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 0.0,
-                                )
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ),
                   ),
                 ],
@@ -153,16 +161,13 @@ class LeaderBoard extends StatelessWidget {
             ),
           ),
           Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
+            decoration: BoxDecoration(color: Colors.white, boxShadow: [
               BoxShadow(
                 color: Colors.grey,
                 blurRadius: 10.0,
               ),
             ]),
             height: 70.0,
-            
             padding: EdgeInsets.all(10),
             child: Container(
               decoration: BoxDecoration(
